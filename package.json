@@ -1,0 +1,11 @@
+{
+  "name": "yt-regret",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "icons": "node tools/make-icons.cjs"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2"
+  }
+}
