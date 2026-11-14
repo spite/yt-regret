@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YT Regret</title>
+  <meta name="description" content="Take back control of your YouTube history. Remove videos and Shorts from your watch history with one click, or automatically.">
+  <meta property="og:title" content="YT Regret: take back control of your YouTube history">
+  <meta property="og:description" content="Remove videos and Shorts from your YouTube watch history with one click, or automatically, so the algorithm only learns from what you meant to watch.">
+  <meta property="og:image" content="https://spite.github.io/yt-regret/store/promo-marquee-1400x560.png">
+  <meta property="og:url" content="https://spite.github.io/yt-regret/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" sizes="32x32" href="extension/icons/icon32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="extension/icons/icon16.png">
+  <link rel="apple-touch-icon" href="extension/icons/icon128.png">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #181818;
+      --surface-2: #212121;
+      --fg: #f1f1f1;
+      --muted: #a8a8a8;
+      --border: #2a2a2a;
+      --accent: #e5483d;
+      --accent-hover: #f05a4f;
+      --on-accent: #ffffff;
+      --ok: #3ec46d;
+      --glow: rgba(229, 72, 61, 0.22);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      color-scheme: dark;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --bg: #ffffff;
+        --surface: #f7f6f5;
+        --surface-2: #efedeb;
+        --fg: #141414;
+        --muted: #5e5e5e;
+        --border: #e4e1de;
+        --accent: #d63a2f;
+        --accent-hover: #c0322a;
+        --ok: #1e7e34;
+        --glow: rgba(229, 72, 61, 0.12);
+        --shadow: 0 20px 50px rgba(20, 10, 5, 0.14);
+        color-scheme: light;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    @media (min-width: 720px) {
+      .wrap { padding: 0 32px; }
+    }
+
+    /* Header */
+
+    header.top {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .top .wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 64px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      text-decoration: none;
+    }
+
+    .brand img { width: 32px; height: 32px; }
+
+    nav.links {
+      display: none;
+      gap: 24px;
+      margin-left: auto;
+      font-size: 15px;
+    }
+
+    nav.links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    nav.links a:hover { color: var(--fg); }
+
+    @media (min-width: 760px) {
+      nav.links { display: flex; }
+    }
+
+    .top .cta {
+      margin-left: auto;
+    }
+
+    @media (min-width: 760px) {
+      .top .cta { margin-left: 8px; }
+    }
+
+    /* Buttons */
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 22px;
+      border: 1px solid transparent;
+      border-radius: 22px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--on-accent);
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-ghost {
+      border-color: var(--border);
+      color: var(--fg);
+      background: transparent;
+    }
+
+    .btn-ghost:hover { border-color: var(--muted); }
+
+    .btn-small {
+      min-height: 36px;
+      padding: 0 16px;
+      font-size: 14px;
+    }
+
+    .btn:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* Hero */
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 72px 0 56px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -20% auto auto -10%;
+      width: 70%;
+      aspect-ratio: 1;
+      background: radial-gradient(closest-side, var(--glow), transparent);
+      pointer-events: none;
+    }
+
+    .hero .wrap {
+      position: relative;
+      display: grid;
+      gap: 48px;
+      align-items: center;
+    }
+
+    @media (min-width: 960px) {
+      .hero { padding: 104px 0 88px; }
+      .hero .wrap { grid-template-columns: 1fr 1.1fr; }
+    }
+
+    .hero img.logo {
+      width: 72px;
+      height: 72px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(36px, 6vw, 60px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .hero .lede {
+      margin: 20px 0 32px;
+      color: var(--muted);
+      font-size: clamp(17px, 2.2vw, 20px);
+      max-width: 34em;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Before / after demo */
+
+    .demo {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .demo-stage {
+      position: relative;
+      aspect-ratio: 16 / 10;
+    }
+
+    .demo-stage img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.35s;
+    }
+
+    .demo-stage img.after { opacity: 0; }
+
+    .demo[data-state="after"] img.after { opacity: 1; }
+
+    .demo[data-state="after"] img.before { opacity: 0; }
+
+    .demo-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .demo-bar .status strong { color: var(--fg); }
+
+    .demo[data-state="after"] .demo-bar .status strong { color: var(--ok); }
+
+    /* Sections */
+
+    section {
+      padding: 72px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+    }
+
+    .section-lede {
+      margin: 0 0 48px;
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 40em;
+    }
+
+    .story p {
+      max-width: 40em;
+      margin: 0 0 16px;
+      font-size: clamp(18px, 2.2vw, 21px);
+      color: var(--muted);
+    }
+
+    .story p strong { color: var(--fg); }
+
+    /* Features */
+
+    .feature {
+      display: grid;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 72px;
+    }
+
+    .feature:last-child { margin-bottom: 0; }
+
+    @media (min-width: 880px) {
+      .feature {
+        grid-template-columns: 1fr 1.35fr;
+        gap: 56px;
+      }
+
+      .feature.flip { grid-template-columns: 1.35fr 1fr; }
+
+      .feature.flip .feature-text { order: 2; }
+    }
+
+    .feature h3 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .feature p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 2px 10px;
+      border-radius: 10px;
+      background: color-mix(in srgb, var(--accent) 16%, transparent);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .shot {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .extras {
+      display: grid;
+      gap: 16px;
+      margin-top: 72px;
+    }
+
+    @media (min-width: 720px) {
+      .extras { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .card {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* Privacy */
+
+    .points {
+      display: grid;
+      gap: 16px;
+    }
+
+    @media (min-width: 720px) {
+      .points { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .points .card { background: transparent; }
+
+    /* FAQ */
+
+    details {
+      border-bottom: 1px solid var(--border);
+    }
+
+    details:first-of-type { border-top: 1px solid var(--border); }
+
+    summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 0;
+      font-size: 18px;
+      font-weight: 600;
+      list-style: none;
+      cursor: pointer;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary::after {
+      content: "+";
+      flex: none;
+      color: var(--muted);
+      font-weight: 400;
+      transition: transform 0.2s;
+    }
+
+    details[open] summary::after { transform: rotate(45deg); }
+
+    details p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      max-width: 44em;
+    }
+
+    /* Final CTA + footer */
+
+    .final {
+      text-align: center;
+    }
+
+    .final h2 { margin-bottom: 12px; }
+
+    .final .section-lede { margin: 0 auto 32px; }
+
+    .final .actions { justify-content: center; }
+
+    footer {
+      padding: 40px 0 56px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer .wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      justify-content: space-between;
+    }
+
+    footer a { color: var(--fg); text-decoration: none; }
+
+    footer a:hover { text-decoration: underline; }
+
+    footer .links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+
+    footer .disclaimer { flex-basis: 100%; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="#">
+        <img src="extension/icons/icon48.png" alt="" width="32" height="32">
+        YT Regret
+      </a>
+      <nav class="links" aria-label="Sections">
+        <a href="#features">Features</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/spite/yt-regret">GitHub</a>
+      </nav>
+      <a class="btn btn-primary btn-small cta" href="https://chromewebstore.google.com/detail/cijjahokiojkmljkhgmhomabmecheodo">Add to Chrome</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="wrap">
+        <div>
+          <img class="logo" src="extension/icons/icon128.png" alt="" width="72" height="72">
+          <h1>Take back control of your YouTube history</h1>
+          <p class="lede">Remove videos and Shorts from your watch history with one click, or automatically, so the algorithm only learns from what you actually meant to watch.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/cijjahokiojkmljkhgmhomabmecheodo">Add to Chrome, it's free</a>
+            <a class="btn btn-ghost" href="https://github.com/spite/yt-regret">View on GitHub</a>
+          </div>
+          <p class="note">Open source, no tracking, nothing leaves your browser.</p>
+        </div>
+
+        <figure class="demo" id="demo" data-state="before" style="margin:0">
+          <div class="demo-stage">
+            <img class="before" src="store/1-watch-regret.png" alt="The Regret button next to Like and Share under a YouTube video" width="1280" height="800">
+            <img class="after" src="store/2-watch-removed.png" alt="The same button after clicking, showing Removed from history" width="1280" height="800">
+          </div>
+          <figcaption class="demo-bar">
+            <span class="status" aria-live="polite">Before: <strong>in your history</strong></span>
+            <button class="btn btn-ghost btn-small" type="button" id="demoToggle">Click Regret</button>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section class="story">
+      <div class="wrap">
+        <h2>We've all been there</h2>
+        <p>A guilty pleasure at 2am. A thumbnail too weird not to click. A clickbait title that turned out to be nothing. You watch for thirty seconds and move on.</p>
+        <p><strong>YouTube doesn't move on.</strong> Your home page fills up with more of the same for weeks.</p>
+        <p>YT Regret lets you take those views back. Once a video is out of your watch history, it stops steering your recommendations.</p>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="wrap">
+        <h2>Regret anything, anywhere</h2>
+        <p class="section-lede">A button where you need it, and rules for the things you'd rather not think about.</p>
+
+        <div class="feature">
+          <div class="feature-text">
+            <span class="tag">Watch history</span>
+            <h3>Clean up past mistakes</h3>
+            <p>Every entry in your watch history gets its own Regret button. One click and it's gone, without digging through menus.</p>
+          </div>
+          <div class="shot"><img src="store/3-history-regret.png" alt="Regret button under an entry on the YouTube watch history page" width="1280" height="800" loading="lazy"></div>
+        </div>
+
+        <div class="feature flip">
+          <div class="feature-text">
+            <span class="tag">Shorts</span>
+            <h3>Doomscroll without consequences</h3>
+            <p>Regret a single Short, or switch on <strong>Auto</strong> and every Short is removed from your history after you swipe past it.</p>
+          </div>
+          <div class="shot"><img src="store/5-short-regret-auto.png" alt="Regret button and Auto toggle in the action bar of a YouTube Short" width="1280" height="800" loading="lazy"></div>
+        </div>
+
+        <div class="feature">
+          <div class="feature-text">
+            <span class="tag">Channels</span>
+            <h3>Always regret a channel</h3>
+            <p>Click <strong>Always regret</strong> on a channel's page, and its videos and Shorts never stay in your history, however long you watch.</p>
+          </div>
+          <div class="shot"><img src="store/4-channel-always-regret.png" alt="Always regret button next to Subscribe on a YouTube channel page" width="1280" height="800" loading="lazy"></div>
+        </div>
+
+        <div class="feature flip">
+          <div class="feature-text">
+            <span class="tag">Options</span>
+            <h3>Your rules, and a log of what happened</h3>
+            <p>Turn features on and off, manage your channel list, see what's waiting to be removed, and check which rule removed each video.</p>
+          </div>
+          <div class="shot"><img src="store/6-options.png" alt="YT Regret options page with rules, channels and recent activity" width="1280" height="800" loading="lazy"></div>
+        </div>
+
+        <div class="extras">
+          <div class="card">
+            <h3>Clickbait filter</h3>
+            <p>Remove anything you leave within N seconds of playback. Ads don't count.</p>
+          </div>
+          <div class="card">
+            <h3>Never while you watch</h3>
+            <p>Automatic removals happen a few seconds after you leave a video, so the view can't sneak back in.</p>
+          </div>
+          <div class="card">
+            <h3>It keeps trying</h3>
+            <p>If YouTube hasn't recorded a view yet, the removal is queued and retried in the background.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy">
+      <div class="wrap">
+        <h2>Private by design</h2>
+        <p class="section-lede">YT Regret uses the same "Remove from watch history" action as YouTube's own history page, in your browser, signed in as you.</p>
+        <div class="points">
+          <div class="card">
+            <h3>No servers</h3>
+            <p>Nothing is sent to the developer or anyone else. The only requests go to youtube.com, for your own account.</p>
+          </div>
+          <div class="card">
+            <h3>No tracking</h3>
+            <p>No analytics, no accounts, no ads. Your settings stay in your browser and sync through Chrome if you use it.</p>
+          </div>
+          <div class="card">
+            <h3>Open source</h3>
+            <p>MIT licensed and small enough to read. <a href="https://github.com/spite/yt-regret/blob/main/PRIVACY.md">Privacy policy</a> · <a href="https://github.com/spite/yt-regret">Source</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="wrap">
+        <h2>Questions</h2>
+        <details>
+          <summary>Does this really change my recommendations?</summary>
+          <p>Your watch history is one of the main signals YouTube uses for recommendations. Removing a video from it is the same as removing it yourself on the history page, so it stops counting towards what YouTube shows you next.</p>
+        </details>
+        <details>
+          <summary>Why not use the YouTube API?</summary>
+          <p>YouTube's public API hasn't offered access to watch history since 2016. YT Regret works from inside youtube.com instead, doing what the history page does when you click ✕.</p>
+        </details>
+        <details>
+          <summary>Which browsers does it work in?</summary>
+          <p>It's built for desktop Chrome and installed from the Chrome Web Store. It doesn't work in YouTube's mobile apps.</p>
+        </details>
+        <details>
+          <summary>Does it need to stay open?</summary>
+          <p>Removals run while a YouTube tab is open. Anything still queued when you close YouTube resumes the next time you open it.</p>
+        </details>
+        <details>
+          <summary>A button disappeared. What happened?</summary>
+          <p>YouTube changes its page layout from time to time. If a button stops showing up, please <a href="https://github.com/spite/yt-regret/issues">open an issue</a>. After the extension updates, reload your open YouTube tabs once as well.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="final">
+      <div class="wrap">
+        <h2>Regret less</h2>
+        <p class="section-lede">Free, open source, and one click away.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/cijjahokiojkmljkhgmhomabmecheodo">Add to Chrome</a>
+          <a class="btn btn-ghost" href="https://github.com/spite/yt-regret">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>Made by <a href="https://github.com/spite">Jaume Sanchez</a></span>
+      <span class="links">
+        <a href="https://github.com/spite/yt-regret">GitHub</a>
+        <a href="https://github.com/spite/yt-regret/blob/main/PRIVACY.md">Privacy policy</a>
+        <a href="https://github.com/spite/yt-regret/blob/main/LICENSE">MIT license</a>
+      </span>
+      <span class="disclaimer">YT Regret is not affiliated with or endorsed by YouTube or Google.</span>
+    </div>
+  </footer>
+
+  <script>
+    const demo = document.getElementById('demo');
+    const toggle = document.getElementById('demoToggle');
+    const status = demo.querySelector('.status');
+    toggle.addEventListener('click', () => {
+      const after = demo.dataset.state !== 'after';
+      demo.dataset.state = after ? 'after' : 'before';
+      status.innerHTML = after ? 'After: <strong>removed from history</strong>' : 'Before: <strong>in your history</strong>';
+      toggle.textContent = after ? 'Show before' : 'Click Regret';
+    });
+  </script>
+</body>
+</html>
