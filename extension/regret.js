@@ -423,7 +423,9 @@
   // --- Channel pages: "Always regret" toggles the channel in the auto-regret list.
 
   const CHANNEL_BUTTON_ID = 'yt-regret-channel-btn';
-  const CHANNEL_PATH = /^\/(@[^/]+|channel\/(UC[\w-]{22})|c\/[^/]+|user\/[^/]+)(\/|$)/;
+  // @handle, /channel/UC…, /c/name, /user/name, or a legacy bare custom URL like /NewRockstars.
+  const CHANNEL_PATH = /^\/(@[^/]+|channel\/(UC[\w-]{22})|c\/[^/]+|user\/[^/]+|[^/@][^/]*)(\/|$)/;
+  const INITIAL_PATH = location.pathname;
   const CHANNEL_HEADER_SELECTORS = [
     'yt-page-header-view-model yt-flexible-actions-view-model',
     '#page-header yt-flexible-actions-view-model',
@@ -432,17 +434,32 @@
   ];
 
   // The page data lags behind the URL during in-app navigation, so it is only trusted once it matches.
+  const samePath = (a, b) => decodeURIComponent(a).toLowerCase() === decodeURIComponent(b).toLowerCase();
+
+  function dataPath(app) {
+    const url = app?.url ?? app?.endpoint?.commandMetadata?.webCommandMetadata?.url;
+    return url ? new URL(url, location.origin).pathname : null;
+  }
+
+  // Page data lags behind the URL during in-app navigation, so it is only trusted once it provably
+  // belongs to the current address.
   function currentChannel() {
     const match = location.pathname.match(CHANNEL_PATH);
     if (!match) return null;
-    const responses = [document.querySelector('ytd-app')?.data?.response, window.ytInitialData];
-    for (const response of responses) {
+    const segment = decodeURIComponent(match[1]).toLowerCase();
+    const app = document.querySelector('ytd-app')?.data;
+    const sources = [
+      { response: app?.response, path: dataPath(app) },
+      { response: window.ytInitialData, path: INITIAL_PATH },
+    ];
+    for (const { response, path } of sources) {
       const meta = response?.metadata?.channelMetadataRenderer;
       if (!meta?.externalId) continue;
-      const segment = decodeURIComponent(match[1]).toLowerCase();
+      const vanity = decodeURIComponent(meta.vanityChannelUrl ?? '').toLowerCase();
       const fits = match[2] ? meta.externalId === match[2]
-        : segment.startsWith('@') ? decodeURIComponent(meta.vanityChannelUrl ?? '').toLowerCase().endsWith(`/${segment}`)
-        : true;
+        : path ? samePath(path, location.pathname)
+        : segment.startsWith('@') ? vanity.endsWith(`/${segment}`)
+        : /^(c|user)\//.test(segment) || vanity.endsWith(`/@${segment}`);
       if (fits) return { id: meta.externalId, name: meta.title || meta.externalId };
     }
     return null;

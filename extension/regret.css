@@ -56,9 +56,12 @@ html[dark] .yt-regret-shorts {
 
 /* Channel pages: "Always regret" toggle beside Subscribe */
 
-.yt-regret-channel {
+.yt-regret-btn.yt-regret-channel {
   gap: 6px;
   align-self: center;
+  height: 40px;
+  margin-left: 0;
+  border-radius: 20px;
 }
 
 .yt-regret-channel .yt-regret-icon {
