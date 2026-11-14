@@ -243,6 +243,8 @@ async function initQueue() {
 }
 
 async function init() {
+  const version = chrome.runtime?.getManifest?.().version;
+  if (version) $('version').textContent = `v${version}`;
   initQueue();
   const settings = await chrome.storage.sync.get(YT_REGRET_DEFAULTS);
 
