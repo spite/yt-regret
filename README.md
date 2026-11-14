@@ -87,3 +87,5 @@ There's no build step. Edit the files, then reload the extension in `chrome://ex
 ## License
 
 [MIT](LICENSE)
+
+YT Regret is not affiliated with or endorsed by YouTube or Google.
