@@ -451,6 +451,18 @@
 
     .final h2 { margin-bottom: 12px; }
 
+    .final del {
+      color: var(--muted);
+      text-decoration: line-through;
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: 0.09em;
+    }
+
+    .final ins {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
     .final .section-lede { margin: 0 auto 32px; }
 
     .final .actions { justify-content: center; }
@@ -638,7 +650,7 @@
 
     <section class="final">
       <div class="wrap">
-        <h2>Regret less</h2>
+        <h2 aria-label="Regret more">Regret <del>less</del> <ins>more</ins></h2>
         <p class="section-lede">Free, open source, and one click away.</p>
         <div class="actions">
           <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/cijjahokiojkmljkhgmhomabmecheodo">Add to Chrome</a>
