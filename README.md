@@ -59,7 +59,7 @@ You need to be signed in to YouTube, since watch history belongs to your account
 
 YouTube's public API has no access to watch history (Google removed it in 2016), so YT Regret does what YouTube's own history page does. It finds the video in your history and sends the same "Remove from watch history" request YouTube sends when you click ✕ there. Everything happens in your browser, signed in as you, on youtube.com.
 
-- **Nothing leaves your browser.** No servers, no analytics, no tracking. The only requests go to youtube.com, for your own account.
+- **Nothing leaves your browser.** No servers, no analytics, no tracking. The only requests go to youtube.com, for your own account. See the [privacy policy](PRIVACY.md).
 - **Permissions:** access to `www.youtube.com` (to add the buttons and make the removal requests) and `storage` (to save your settings). Chrome shows the youtube.com access as "Read and change your data on www.youtube.com".
 - Settings sync across devices signed into the same Chrome account. The removal queue stays in youtube.com's local storage in each browser.
 
