@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "icons": "node tools/make-icons.cjs",
-    "package": "node tools/package.cjs"
+    "package": "node tools/package.cjs",
+    "promo": "node tools/make-promo.cjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "2.6.2"

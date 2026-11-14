@@ -32,10 +32,14 @@ function iconSvg({ pad, sw, fill, hands, arrow, gap }) {
 `;
 }
 
-fs.mkdirSync(OUT, { recursive: true });
-for (const [size, opts] of Object.entries(SIZES)) {
-  const png = new Resvg(iconSvg(opts), { fitTo: { mode: 'width', value: Number(size) } }).render().asPng();
-  fs.writeFileSync(path.join(OUT, `icon${size}.png`), png);
+module.exports = { iconSvg, SIZES, COLOR };
+
+if (require.main === module) {
+  fs.mkdirSync(OUT, { recursive: true });
+  for (const [size, opts] of Object.entries(SIZES)) {
+    const png = new Resvg(iconSvg(opts), { fitTo: { mode: 'width', value: Number(size) } }).render().asPng();
+    fs.writeFileSync(path.join(OUT, `icon${size}.png`), png);
+  }
+  fs.writeFileSync(path.join(__dirname, 'icon.svg'), iconSvg(SIZES[48]));
+  console.log(`icons written to ${OUT}`);
 }
-fs.writeFileSync(path.join(__dirname, 'icon.svg'), iconSvg(SIZES[48]));
-console.log(`icons written to ${OUT}`);
