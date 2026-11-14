@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YT Regret Options</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>YT Regret</h1>
+      <p class="lede">Remove videos from your YouTube watch history, by hand or automatically.</p>
+      <span id="status" class="status" role="status" aria-live="polite"></span>
+    </header>
+
+    <section>
+      <h2>Buttons</h2>
+      <label class="row">
+        <input type="checkbox" id="buttonVideos">
+        <span>Show the Regret button on videos</span>
+      </label>
+      <label class="row">
+        <input type="checkbox" id="buttonShorts">
+        <span>Show the Regret button and Auto toggle on Shorts</span>
+      </label>
+      <label class="row">
+        <input type="checkbox" id="buttonHistory">
+        <span>Show a Regret button on every entry in your watch history</span>
+      </label>
+    </section>
+
+    <section>
+      <h2>Auto-regret</h2>
+      <p class="hint">Videos are removed a few seconds after you leave them, never while they're still playing.</p>
+      <label class="row">
+        <input type="checkbox" id="autoShorts">
+        <span>Remove every Short after you swipe past it</span>
+      </label>
+      <label class="row">
+        <input type="checkbox" id="abandonEnabled">
+        <span>
+          Remove videos I leave within
+          <input type="number" id="abandonSeconds" min="5" max="600" step="5" aria-label="Seconds">
+          seconds of playback
+        </span>
+      </label>
+      <p class="hint indent">Counts only time the video was actually playing; ads don't count.</p>
+    </section>
+
+    <section>
+      <h2>Channels</h2>
+      <p class="hint">Videos and Shorts from these channels are always removed after you watch them.</p>
+      <form id="addChannel" class="add">
+        <input type="text" id="channelInput" placeholder="@handle, channel URL, or a video URL from the channel" autocomplete="off" spellcheck="false">
+        <button type="submit" id="addButton">Add</button>
+      </form>
+      <p id="channelError" class="error" hidden></p>
+      <ul id="channelList" class="channels"></ul>
+      <p id="channelEmpty" class="hint">No channels yet.</p>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Waiting to be removed</h2>
+        <div class="actions">
+          <button type="button" class="secondary" id="retryAll">Retry all now</button>
+          <button type="button" class="secondary" id="clearQueue">Discard all</button>
+        </div>
+      </div>
+      <p id="queueSeen" class="hint"></p>
+      <ul id="queueList" class="items"></ul>
+      <p id="queueEmpty" class="hint">Nothing waiting. Everything you regretted has been removed.</p>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Recent activity</h2>
+        <div class="actions">
+          <button type="button" class="secondary" id="clearActivity">Clear</button>
+        </div>
+      </div>
+      <ul id="activityList" class="items"></ul>
+      <p id="activityEmpty" class="hint">No activity yet.</p>
+    </section>
+  </main>
+
+  <script src="settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

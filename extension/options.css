@@ -1,0 +1,292 @@
+:root {
+  --bg: #ffffff;
+  --surface: #f6f6f6;
+  --fg: #0f0f0f;
+  --muted: #606060;
+  --border: #e0e0e0;
+  --accent: #065fd4;
+  --on-accent: #ffffff;
+  --error: #cc0000;
+  --ok: #1e7e34;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1c1c1c;
+    --fg: #f1f1f1;
+    --muted: #aaaaaa;
+    --border: #303030;
+    --accent: #3ea6ff;
+    --on-accent: #0f0f0f;
+    --error: #ff6b6b;
+    --ok: #3ec46d;
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.5 "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 16px 64px;
+}
+
+header {
+  position: relative;
+  margin-bottom: 32px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 17px;
+}
+
+.lede {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.status {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  color: var(--ok);
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.status.visible {
+  opacity: 1;
+}
+
+section {
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.row input[type="checkbox"] {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  transform: translateY(2px);
+  accent-color: var(--accent);
+}
+
+.hint {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.indent {
+  margin-left: 26px;
+}
+
+input[type="number"],
+input[type="text"] {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+}
+
+input[type="number"] {
+  width: 72px;
+  margin: 0 4px;
+  padding: 2px 6px;
+}
+
+input:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.add {
+  display: flex;
+  gap: 8px;
+}
+
+.add input {
+  flex: 1;
+  min-width: 0;
+}
+
+button {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 18px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.error {
+  margin: 8px 0 0;
+  color: var(--error);
+  font-size: 13px;
+}
+
+.channels {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.channels li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.channels a {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--fg);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.channels a:hover {
+  text-decoration: underline;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+button.secondary,
+.items button {
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+button.secondary:hover,
+.items button:hover {
+  color: var(--fg);
+  border-color: var(--muted);
+}
+
+.items {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.items li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.items .info {
+  flex: 1;
+  min-width: 0;
+}
+
+.items .title {
+  display: block;
+  overflow: hidden;
+  color: var(--fg);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.items .title:hover {
+  text-decoration: underline;
+}
+
+.items .meta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.items .meta .rule {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.items .meta .problem {
+  color: var(--error);
+}
+
+.badge {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.badge.removed {
+  background: color-mix(in srgb, var(--ok) 18%, transparent);
+  color: var(--ok);
+}
+
+.badge.gave-up {
+  background: color-mix(in srgb, var(--error) 18%, transparent);
+  color: var(--error);
+}
+
+.channels .remove {
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--muted);
+  font-size: 13px;
+}

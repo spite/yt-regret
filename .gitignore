@@ -1,0 +1,7 @@
+# Packaged builds (store uploads, old .crx downloads)
+*.crx
+*.zip
+
+node_modules/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "YT Regret",
+  "short_name": "YT Regret",
+  "description": "Remove videos and Shorts from your YouTube watch history with one click, or automatically.",
+  "version": "2.0",
+  "permissions": ["storage"],
+  "host_permissions": ["https://www.youtube.com/*"],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["settings.js", "bridge.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["settings.js", "regret.js"],
+      "css": ["regret.css"],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    }
+  ]
+}
