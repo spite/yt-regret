@@ -21,14 +21,29 @@ YT Regret lets you take those views back. One click removes a video from your wa
 
 ## Screenshots
 
-| | |
-|---|---|
-| <img src="store/1-watch-regret.png" alt="Regret button next to Like and Share on a video"> | <img src="store/2-watch-removed.png" alt="The button after clicking, showing Removed from history"> |
-| One click on any video… | …and it's gone from your history. |
-| <img src="store/3-history-regret.png" alt="Regret chip under an entry on the watch history page"> | <img src="store/5-short-regret-auto.png" alt="Regret button and Auto toggle on a Short"> |
-| Clean up past mistakes from your watch history. | Regret a Short, or turn on Auto to remove every Short you swipe past. |
-| <img src="store/4-channel-always-regret.png" alt="Always regret button on a channel page"> | <img src="store/6-options.png" alt="Options page with rules and recent activity"> |
-| Always regret a channel, right from its page. | Rules, channels, and a log of what was removed and why. |
+**One click on any video…**
+
+![Regret button next to Like and Share on a video](store/1-watch-regret.png)
+
+**…and it's gone from your history.**
+
+![The button after clicking, showing Removed from history](store/2-watch-removed.png)
+
+**Clean up past mistakes from your watch history.**
+
+![Regret chip under an entry on the watch history page](store/3-history-regret.png)
+
+**Regret a Short, or turn on Auto to remove every Short you swipe past.**
+
+![Regret button and Auto toggle on a Short](store/5-short-regret-auto.png)
+
+**Always regret a channel, right from its page.**
+
+![Always regret button on a channel page](store/4-channel-always-regret.png)
+
+**Rules, channels, and a log of what was removed and why.**
+
+![Options page with rules and recent activity](store/6-options.png)
 
 ## Install
 
