@@ -3,7 +3,8 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "icons": "node tools/make-icons.cjs"
+    "icons": "node tools/make-icons.cjs",
+    "package": "node tools/package.cjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "2.6.2"
