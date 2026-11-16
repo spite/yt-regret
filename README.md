@@ -6,8 +6,6 @@
 
 <a href="https://chromewebstore.google.com/detail/cijjahokiojkmljkhgmhomabmecheodo"><img src="store/chrome-web-store-badge.png" alt="Available in the Chrome Web Store" height="48"></a>
 
-[![Chrome Web Store version](https://img.shields.io/chrome-web-store/v/cijjahokiojkmljkhgmhomabmecheodo)](https://chromewebstore.google.com/detail/cijjahokiojkmljkhgmhomabmecheodo) · [Website](https://spite.github.io/yt-regret/)
-
 We've all been there. A guilty pleasure at 2am. A thumbnail that was too weird not to click. A clickbait title that turned out to be nothing. You watch it for thirty seconds, close it, and move on. YouTube doesn't move on: your home page fills up with more of the same for the next two weeks.
 
 YT Regret lets you take those views back. One click removes a video from your watch history, so it stops steering your recommendations. You can also set rules to do it automatically, so the algorithm only learns from what you actually meant to watch.
@@ -52,6 +50,7 @@ YT Regret lets you take those views back. One click removes a video from your wa
 ## Install
 
 - **Chrome Web Store:** [Install YT Regret](https://chromewebstore.google.com/detail/cijjahokiojkmljkhgmhomabmecheodo)
+- **Website:** [spite.github.io/yt-regret](https://spite.github.io/yt-regret/)
 - **From source:**
   1. Clone this repo.
   2. Open `chrome://extensions` and turn on **Developer mode**.
